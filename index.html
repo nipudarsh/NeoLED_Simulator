@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoLED Arduino Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="neon-header">
+            <h1><span class="neon-text-blue">Neo</span><span class="neon-text-green">LED</span> Simulator</h1>
+            <div class="controls">
+                <button id="btn-run" class="neon-btn run">▶ RUN</button>
+                <button id="btn-pause" class="neon-btn pause" disabled>⏸ PAUSE</button>
+                <button id="btn-reset" class="neon-btn reset">🔄 RESET</button>
+                <button id="btn-add-led" class="neon-btn add">+ ADD LED</button>
+                <button id="btn-save" class="neon-btn">💾 SAVE</button>
+                <label for="file-load" class="neon-btn">📂 LOAD</label>
+                <input type="file" id="file-load" style="display: none" accept=".json">
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- Code Editor Pane -->
+            <section class="pane editor-pane">
+                <div class="pane-header">
+                    <h2>// ARDUINO CODE</h2>
+                    <div class="editor-controls">
+                        <select id="template-select">
+                            <option value="">-- Load Template --</option>
+                            <option value="blink">Blink</option>
+                            <option value="fade">Fade</option>
+                            <option value="siren">Police Siren</option>
+                            <option value="knight_rider">Knight Rider</option>
+                            <option value="complex">Complex Patterns</option>
+                        </select>
+                        <button id="btn-download" class="icon-btn" title="Download Code">💾</button>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <textarea id="code-editor" spellcheck="false">
+void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13, HIGH);
+  delay(1000);
+  digitalWrite(13, LOW);
+  delay(1000);
+}
+                    </textarea>
+                </div>
+            </section>
+
+            <!-- Simulation Pane -->
+            <section class="pane simulation-pane">
+                <div class="pane-header">
+                    <h2>// BREADBOARD & UNO</h2>
+                    <span id="sim-status" class="status-indicator">OFFLINE</span>
+                </div>
+                <div id="board-container" class="board-container">
+                    <!-- Virtual Arduino Board -->
+                    <div class="arduino-board">
+                        <div class="board-label">UNO</div>
+                        <!-- Digital Pins -->
+                        <div class="pin-group digital-pins">
+                            <div class="pin-label">DIGITAL (PWM~)</div>
+                            <div class="pin-row" data-pin="13">
+                                <div class="pin-hole"></div><span>13</span>
+                            </div>
+                            <div class="pin-row" data-pin="12">
+                                <div class="pin-hole"></div><span>12</span>
+                            </div>
+                            <div class="pin-row" data-pin="11">
+                                <div class="pin-hole"></div><span>~11</span>
+                            </div>
+                            <div class="pin-row" data-pin="10">
+                                <div class="pin-hole"></div><span>~10</span>
+                            </div>
+                            <div class="pin-row" data-pin="9">
+                                <div class="pin-hole"></div><span>~9</span>
+                            </div>
+                            <div class="pin-row" data-pin="8">
+                                <div class="pin-hole"></div><span>8</span>
+                            </div>
+                            <div class="pin-row" data-pin="7">
+                                <div class="pin-hole"></div><span>7</span>
+                            </div>
+                            <div class="pin-row" data-pin="6">
+                                <div class="pin-hole"></div><span>~6</span>
+                            </div>
+                            <div class="pin-row" data-pin="5">
+                                <div class="pin-hole"></div><span>~5</span>
+                            </div>
+                            <div class="pin-row" data-pin="4">
+                                <div class="pin-hole"></div><span>4</span>
+                            </div>
+                            <div class="pin-row" data-pin="3">
+                                <div class="pin-hole"></div><span>~3</span>
+                            </div>
+                            <div class="pin-row" data-pin="2">
+                                <div class="pin-hole"></div><span>2</span>
+                            </div>
+                            <div class="pin-row" data-pin="1">
+                                <div class="pin-hole"></div><span>TX→1</span>
+                            </div>
+                            <div class="pin-row" data-pin="0">
+                                <div class="pin-hole"></div><span>RX←0</span>
+                            </div>
+                            <div class="pin-row monitor-pin" data-pin="GND">
+                                <div class="pin-hole"></div><span>GND</span>
+                            </div>
+                        </div>
+
+                        <!-- Analog Pins -->
+                        <div class="pin-group analog-pins">
+                            <div class="pin-label">ANALOG IN</div>
+                            <div class="pin-row" data-pin="A0">
+                                <div class="pin-hole"></div><span>A0</span>
+                            </div>
+                            <div class="pin-row" data-pin="A1">
+                                <div class="pin-hole"></div><span>A1</span>
+                            </div>
+                            <div class="pin-row" data-pin="A2">
+                                <div class="pin-hole"></div><span>A2</span>
+                            </div>
+                            <div class="pin-row" data-pin="A3">
+                                <div class="pin-hole"></div><span>A3</span>
+                            </div>
+                            <div class="pin-row" data-pin="A4">
+                                <div class="pin-hole"></div><span>A4</span>
+                            </div>
+                            <div class="pin-row" data-pin="A5">
+                                <div class="pin-hole"></div><span>A5</span>
+                            </div>
+                        </div>
+
+                        <!-- Power Pins -->
+                        <div class="pin-group power-pins">
+                            <div class="pin-label">POWER</div>
+                            <div class="pin-row" data-pin="5V">
+                                <div class="pin-hole"></div><span>5V</span>
+                            </div>
+                            <div class="pin-row" data-pin="3.3V">
+                                <div class="pin-hole"></div><span>3.3V</span>
+                            </div>
+                            <div class="pin-row" data-pin="GND">
+                                <div class="pin-hole"></div><span>GND</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Component Area -->
+                    <div id="components-area" class="components-area">
+                        <!-- Dynamic components will be added here -->
+                        <div class="instruction-text">Click "+ ADD LED" to place components</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Console Pane -->
+        <section class="console-pane">
+            <div class="pane-header">
+                <h2>> SERIAL MONITOR</h2>
+                <button id="btn-clear-console" class="icon-btn">🧹</button>
+            </div>
+            <div id="console-output" class="console-output">
+                <div class="log-line system">System initialized. Ready to compile.</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Templates for Components -->
+    <template id="led-template">
+        <div class="component led-component" draggable="true">
+            <div class="led-bulb"></div>
+            <div class="led-controls">
+                <select class="pin-selector">
+                    <option value="">Pin?</option>
+                    <!-- Options populated by JS -->
+                </select>
+                <div class="color-swatches">
+                    <div class="swatch" data-color="#0AFF00" style="background: #0AFF00;" title="Neon Green"></div>
+                    <div class="swatch" data-color="#FF003C" style="background: #FF003C;" title="Neon Red"></div>
+                    <div class="swatch" data-color="#00F3FF" style="background: #00F3FF;" title="Neon Blue"></div>
+                    <div class="swatch" data-color="#BC13FE" style="background: #BC13FE;" title="Neon Purple"></div>
+                    <div class="swatch" data-color="#FF9900" style="background: #FF9900;" title="Neon Orange"></div>
+                </div>
+                <!-- Hidden native picker for custom -->
+                <input type="color" class="color-picker" value="#0AFF00"
+                    style="width: 100%; opacity: 0.3; height: 5px;">
+                <button class="btn-remove">×</button>
+            </div>
+            <div class="connection-line"></div>
+        </div>
+    </template>
+
+    <script src="engine.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

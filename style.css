@@ -1,0 +1,485 @@
+:root {
+    --bg-dark: #0a0a12;
+    --bg-panel: #11111a;
+    --neon-blue: #00f3ff;
+    --neon-green: #0aff00;
+    --neon-red: #ff003c;
+    --neon-purple: #bc13fe;
+    --text-main: #e0e0e0;
+    --text-dim: #888888;
+    --arduino-teal: #00979d;
+    --border-color: #2a2a35;
+
+    --font-heading: 'Orbitron', sans-serif;
+    --font-ui: 'Roboto Mono', monospace;
+    --font-code: 'Courier Prime', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-ui);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.neon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 2px solid var(--border-color);
+    background: linear-gradient(to right, #0a0a12, #161621);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.neon-text-blue {
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px var(--neon-blue);
+}
+
+.neon-text-green {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+/* Controls */
+.controls .neon-btn {
+    background: transparent;
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 8px 16px;
+    margin-left: 10px;
+    font-family: var(--font-ui);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-shadow: 0 0 5px var(--neon-blue);
+    box-shadow: 0 0 5px rgba(0, 243, 255, 0.2);
+}
+
+.controls .neon-btn:hover {
+    background: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+}
+
+.controls .neon-btn.run {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+.controls .neon-btn.pause {
+    border-color: #ffaa00;
+    color: #ffaa00;
+    text-shadow: 0 0 5px #ffaa00;
+}
+
+.controls .neon-btn.reset {
+    border-color: var(--neon-red);
+    color: var(--neon-red);
+    text-shadow: 0 0 5px var(--neon-red);
+}
+
+.controls .neon-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Workspace */
+.workspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.pane {
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.pane-header {
+    padding: 8px 15px;
+    background: #1a1a25;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pane-header h2 {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-weight: normal;
+}
+
+/* Editor */
+.editor-pane {
+    width: 40%;
+    min-width: 300px;
+}
+
+.editor-container {
+    flex: 1;
+    position: relative;
+    background: #0d0d15;
+}
+
+textarea#code-editor {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #dcdcdc;
+    font-family: var(--font-code);
+    font-size: 14px;
+    padding: 15px;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0a12;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Simulation Area */
+.simulation-pane {
+    flex: 1;
+    position: relative;
+    background-image:
+        linear-gradient(rgba(10, 16, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(10, 16, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.status-indicator {
+    font-size: 0.8rem;
+    color: var(--neon-red);
+    font-weight: bold;
+}
+
+.status-indicator.running {
+    color: var(--neon-green);
+    text-shadow: 0 0 8px var(--neon-green);
+}
+
+.board-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: auto;
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Virtual Arduino Board */
+.arduino-board {
+    width: 260px;
+    background: #004448;
+    /* Arduino Teal Darkened */
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+}
+
+.board-label {
+    font-family: var(--font-heading);
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.pin-group {
+    margin-bottom: 15px;
+}
+
+.pin-label {
+    font-size: 0.6rem;
+    color: #ccc;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+}
+
+.pin-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 2px 0;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+.pin-hole {
+    width: 10px;
+    height: 10px;
+    background: #111;
+    border: 1px solid #666;
+    border-radius: 50%;
+    margin-left: 5px;
+    box-shadow: inset 1px 1px 2px #000;
+    cursor: pointer;
+}
+
+.arduino-board .digital-pins .pin-row {
+    justify-content: flex-end;
+}
+
+.arduino-board .digital-pins .pin-hole {
+    order: 2;
+    margin-left: 5px;
+    margin-right: 0;
+}
+
+.arduino-board .analog-pins .pin-row {
+    justify-content: flex-start;
+}
+
+.arduino-board .analog-pins .pin-hole {
+    order: 0;
+    margin-right: 5px;
+    margin-left: 0;
+}
+
+.arduino-board .power-pins .pin-row {
+    justify-content: flex-start;
+}
+
+.arduino-board .power-pins .pin-hole {
+    order: 0;
+    margin-right: 5px;
+    margin-left: 0;
+}
+
+
+/* Components Area */
+.components-area {
+    flex: 1;
+    min-width: 300px;
+    min-height: 400px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 30px;
+}
+
+.instruction-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-dim);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* LED Component */
+.led-component {
+    width: 130px;
+    /* Increased from 100px to fit swatches */
+    height: 150px;
+    background: rgba(20, 20, 30, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+    backdrop-filter: blur(5px);
+    transition: box-shadow 0.2s;
+}
+
+.led-component:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.led-bulb {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #333;
+    margin-bottom: 15px;
+    border: 2px solid #555;
+    box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.1s ease-in-out;
+}
+
+.led-bulb.lit {
+    background: var(--led-color, #0f0);
+    box-shadow: 0 0 15px var(--led-color, #0f0), inset 2px 2px 5px rgba(255, 255, 255, 0.5);
+    border-color: #fff;
+}
+
+.led-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.pin-selector {
+    background: #000;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 2px;
+    font-size: 0.8rem;
+    font-family: var(--font-code);
+    width: 100%;
+}
+
+.color-swatches {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.swatch {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid #fff;
+    transition: transform 0.1s;
+    flex-shrink: 0;
+    /* Prevent squashing into ellipses */
+}
+
+.swatch:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 5px #fff;
+}
+
+.color-picker {
+    width: 100%;
+    height: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+.btn-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-remove:hover {
+    color: var(--neon-red);
+}
+
+/* Connection Line Visualization (Conceptual - implemented via JS or Canvas usually, simple CSS for now) */
+/* Ideally we use SVG overlay. For now, we will assume logic handles the visual "connection" via text or simple lines if possible. 
+   Actually, the requirement said "Simple wiring logic", "Show a simple line connection animation".
+   We will treat the 'pin-selector' choice as the 'wire'.
+   Visualizing the actual wire might require an SVG overlay. Detailed in script.js later.
+*/
+
+
+/* Console */
+.console-pane {
+    height: 150px;
+    border-top: 2px solid var(--border-color);
+    background: #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.console-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.log-line {
+    margin-bottom: 2px;
+}
+
+.log-line.system {
+    color: var(--neon-blue);
+}
+
+.log-line.output {
+    color: #fff;
+}
+
+.log-line.error {
+    color: var(--neon-red);
+}
+
+.log-line.info {
+    color: var(--neon-green);
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .workspace {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .editor-pane {
+        width: 100%;
+        height: 40%;
+    }
+
+    .simulation-pane {
+        width: 100%;
+        height: 60%;
+    }
+}
